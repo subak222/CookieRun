@@ -10,7 +10,7 @@ public class PlayerMove : MonoBehaviour
 
     public BoxCollider2D collider1;
     public BoxCollider2D collider2;
-    public Rigidbody2D rigid;
+    private Rigidbody2D rigid;
 
     private int jumpCount = 0;
     private bool jump = true;
