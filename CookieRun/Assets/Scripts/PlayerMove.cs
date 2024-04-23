@@ -1,15 +1,18 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField]
     private Animator anim;
+    [SerializeField]
+    private Slider hp;
+    [SerializeField]
+    private GameObject die;
 
     public float JumpPower;
 
-    public BoxCollider2D collider1;
-    public BoxCollider2D collider2;
     private Rigidbody2D rigid;
 
     private int jumpCount = 0;
@@ -23,13 +26,12 @@ public class PlayerMove : MonoBehaviour
         anim.SetInteger("isJumping", 0);
         anim.SetBool("isSliding", false);
         anim.SetBool("isDying", false);
-
-        collider1.enabled = true;
-        collider2.enabled = false;
     }
 
     void Update()
     {
+        transform.position = new Vector3(-5f, transform.position.y, transform.position.z);
+
         if (Input.GetKeyDown(KeyCode.UpArrow)&&jump==true)
         {
             StartCoroutine("Jump");
@@ -45,8 +47,22 @@ public class PlayerMove : MonoBehaviour
         else
         {
             anim.SetBool("isSliding", false);
-            collider1.enabled = true;
-            collider2.enabled = false;
+        }
+        if (hp.value <= 0)
+        {
+            GameManager.instance.gameOver = true;
+            anim.SetBool("isDying", true);
+        }
+        if (transform.position.y < -10)
+        {
+            GameManager.instance.gameOver = true;
+            hp.value = 0;
+        }
+
+        if (GameManager.instance.gameOver)
+        {
+            Debug.Log("»ç¸Á");
+            die.SetActive(true);
         }
     }
 
@@ -59,8 +75,6 @@ public class PlayerMove : MonoBehaviour
     IEnumerator Slide()
     {
         anim.SetBool("isSliding", true);
-        collider1.enabled = false;
-        collider2.enabled = true;
         yield return new WaitForSeconds(0.1f);
     }
 

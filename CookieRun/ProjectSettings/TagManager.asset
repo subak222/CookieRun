@@ -8,16 +8,16 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Jelly
   - Water
   - UI
-  - 
-  - 
+  - YellowBear
+  - PinkBear
   - Platform
-  - 
-  - 
-  - 
-  - 
+  - sliver
+  - smallGold
+  - bigGold
+  - obstacle
   - 
   - 
   - 
@@ -40,4 +40,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Backgound
+    uniqueID: 1872828167
     locked: 0
