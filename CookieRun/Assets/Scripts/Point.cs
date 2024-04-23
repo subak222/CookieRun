@@ -58,6 +58,15 @@ public class Point : MonoBehaviour
             case "obstacle":
                 hp.value -= 0.05f;
                 break;
+            case "bigHeart":
+                hp.value += 0.3f;
+                Destroy(other.gameObject);
+                break;
+            case "smallHeart":
+                Debug.Log("df");
+                hp.value += 0.1f;
+                Destroy(other.gameObject);
+                break;
         }
     }
 

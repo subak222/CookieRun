@@ -4,20 +4,11 @@ using UnityEngine;
 
 public class PatternManager : MonoBehaviour
 {
-    private int RandomPattern = 0;
-    private int min = 0;
-    private int max = 0;
+    private List<GameObject> availablePatterns = new List<GameObject>();
+    private List<GameObject> usedPatterns = new List<GameObject>();
 
-    private List<GameObject> patternList = new List<GameObject>();
     public GameObject StartPattern;
-    public GameObject pattern1;
-    public GameObject pattern2;
-    public GameObject pattern3;
-
-    public GameObject pattern4;
-    public GameObject pattern5;
-    public GameObject pattern6;
-    public GameObject pattern7;
+    public List<GameObject> patternList = new List<GameObject>();
 
     public float Speed = 0.0f;
     public float delayTime = 0.0f;
@@ -25,43 +16,31 @@ public class PatternManager : MonoBehaviour
 
     private void Start()
     {
-        patternList.Add(pattern1);
-        patternList.Add(pattern2);
-        patternList.Add(pattern3);
-        patternList.Add(pattern4);
-
-        patternList.Add(pattern5);
-        patternList.Add(pattern6);
-        patternList.Add(pattern7);
+        availablePatterns.AddRange(patternList);
         StartCoroutine("CreatePattern");
     }
 
-    private void Update()
-    {
-        switch (GameManager.instance.stage)
-        {
-            case 1:
-                min = 0;
-                max = 2; break;
-            case 2:
-                min = 2;
-                max = 4; break;
-            case 3:
-                min = 4;
-                max = patternList.Count; break;
-        }
-    }
-
-    IEnumerator CreatePattern() // 코루틴
+    IEnumerator CreatePattern()
     {
         GameObject s_pattern = Instantiate(StartPattern, new Vector2(0.0f, 0.0f), Quaternion.identity);
         s_pattern.GetComponent<Pattern>().Init(Speed);
 
         while (!GameManager.instance.gameOver)
         {
-            RandomPattern = Random.Range(min, max);
+            // 패턴이 모두 사용되면 다시 초기화
+            if (availablePatterns.Count == 0)
+                availablePatterns.AddRange(usedPatterns);
 
-            GameObject t_pattern = Instantiate(patternList[RandomPattern], new Vector2(posX, 0.0f), Quaternion.identity);
+            // 사용 가능한 패턴 중에서 랜덤하게 선택
+            int index = Random.Range(0, availablePatterns.Count);
+            GameObject selectedPattern = availablePatterns[index];
+
+            // 선택된 패턴을 사용한 목록으로 이동하고 사용 가능한 목록에서 제거
+            usedPatterns.Add(selectedPattern);
+            availablePatterns.RemoveAt(index);
+
+            // 패턴을 생성하고 초기화
+            GameObject t_pattern = Instantiate(selectedPattern, new Vector2(posX, 0.0f), Quaternion.identity);
             t_pattern.GetComponent<Pattern>().Init(Speed);
 
             yield return new WaitForSeconds(delayTime);
