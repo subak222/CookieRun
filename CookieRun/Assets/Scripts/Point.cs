@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,8 @@ public class Point : MonoBehaviour
     private Text score;
     [SerializeField]
     private Text coin;
+    [SerializeField]
+    private Animator anim;
 
     public float decreaseRate = 0.02f;
 
@@ -56,20 +59,39 @@ public class Point : MonoBehaviour
                 AddCoin(100);
                 break;
             case "obstacle":
-                hp.value -= 0.05f;
+                StartCoroutine(nameof(Hit));
                 break;
             case "bigHeart":
                 hp.value += 0.3f;
                 Destroy(other.gameObject);
                 break;
             case "smallHeart":
-                Debug.Log("df");
                 hp.value += 0.1f;
                 Destroy(other.gameObject);
                 break;
         }
     }
-
+    IEnumerator Hit()
+    {
+        if (0 >= hp.value - 0.05f)
+        {
+            anim.SetBool("isHitDying", true);
+            hp.value -= 0.05f;
+            GameManager.instance.gameOver = true;
+            Invoke("StopAnim", 1f);
+        }
+        else
+        {
+            anim.SetBool("isHiting", true);
+            hp.value -= 0.05f;
+            yield return new WaitForSeconds(0.1f);
+            anim.SetBool("isHiting", false);
+        }
+    }
+    void StopAnim()
+    {
+        anim.speed = 0.0f;
+    }
     // 점수를 추가하는 함수
     private void AddScore(int points, Collider2D other)
     {

@@ -17,7 +17,6 @@ public class ScrollManager : MonoBehaviour
     {
         if (GameManager.instance.gameOver)
         {
-            Debug.Log("»ç¸Á");
             anim.SetBool("isEnd", true);
         }
     }

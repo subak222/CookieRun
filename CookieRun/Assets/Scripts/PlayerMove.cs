@@ -61,9 +61,14 @@ public class PlayerMove : MonoBehaviour
 
         if (GameManager.instance.gameOver)
         {
-            Debug.Log("»ç¸Á");
+            Invoke("StopAnim", 1f);
             die.SetActive(true);
         }
+    }
+
+    void StopAnim()
+    {
+        anim.speed = 0.0f;
     }
 
     IEnumerator Jump()
